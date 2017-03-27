@@ -1,7 +1,7 @@
-- name: install shadowsocks key
-  apt_key: url='{{ shadowsocks_libev_repo_key }}' state=present
-  tags:
-    - ss-server
+#- name: install shadowsocks key
+#  apt_key: url='{{ shadowsocks_libev_repo_key }}' state=present
+#  tags:
+#    - ss-server
 
 - name: add shadowsocks repo
   apt_repository: repo='{{ shadowsocks_libev_repo_url }}' state=present

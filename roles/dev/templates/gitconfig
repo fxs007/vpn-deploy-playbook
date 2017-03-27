@@ -1,0 +1,12 @@
+[alias]
+	co = checkout
+	hist = log --graph --format=format:\"%C(red)%h%C(reset) %C(yellow)%ad%C(reset) | %s %C(green)\\[%an\\]%C(reset)%C(bold blue)%d%C(reset)\" --abbrev-commit --date=short
+	br = branch
+	alias = !git config --global --list | grep ^alias
+	st = status
+	root = rev-parse --show-toplevel
+	ci = commit
+	head = rev-list -n1 --abbrev-commit HEAD
+[user]
+	email = xinsfang@cisco.com
+	name = Xinsheng Fang

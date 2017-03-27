@@ -1,6 +1,9 @@
 ---
 - hosts: ipsec
 
+  vars:
+    ipsec_use_ip_as_domain: true
+
   roles:
     - common
     - strongswan

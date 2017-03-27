@@ -1,0 +1,43 @@
+---
+#install & config dev-tools
+
+- name: Enforce dev-tools is installed for Ubuntu
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - tmux
+    - screen
+    - vim
+    - git
+    - expect
+  when: ansible_distribution == "Ubuntu"
+  tags:
+    - dev
+
+- name:  Upload template file
+  template: src={{ item.src }}
+            dest={{ item.dest }}
+            owner={{ dev_owner }}
+            group={{ dev_group }}
+            mode={{ item.mode }}
+  with_items:
+    - { src: tmux.conf, dest: "{{ dest_prefix }}/.tmux.conf" , mode: "0644" }
+    - { src: screenrc, dest: "{{ dest_prefix }}/.screenrc" , mode: "0644" }
+    - { src: vimrc, dest: "{{ dest_prefix }}/.vimrc" , mode: "0644" }
+    - { src: gitconfig, dest: "{{ dest_prefix }}/.gitconfig" , mode: "0644" }
+  tags:
+    - dev
+
+- name: Upload directory
+  copy:
+    src={{ item.src }}
+    dest={{ item.dest }}
+    owner={{ dev_owner }}
+    group={{ dev_group }}
+    mode=0600
+  with_items:
+    - { src: "{{ role_path }}/templates/.ssh", dest: "{{ dest_prefix }}" }
+  tags:
+    - dev
+
+- include: openwrt.yml
+

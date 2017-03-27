@@ -1,3 +1,4 @@
+*.retry
 ansible_hosts
 host_vars/*
 group_vars/*.yml

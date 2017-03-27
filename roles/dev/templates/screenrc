@@ -1,0 +1,4 @@
+#C-a:source .screenrc
+escape ^Jj
+startup message off
+defscrollback 9999

@@ -1,0 +1,87 @@
+---
+
+#- name: Enforce openwrt tools is installed for Ubuntu
+#  apt: pkg={{ item }} state=installed
+#  with_items:
+#    - 'asciidoc'
+#    - 'bash'
+#    - 'bc'
+#    - 'binutils'
+#    - 'bzip2'
+#    - 'fastjar'
+#    - 'flex'
+#    - 'git-core'
+#    - 'gcc'
+#    - 'util-linux'
+#    - 'gawk'
+#    - 'libgtk2.0-dev'
+#    - 'intltool'
+#    - 'jikespg'
+#    - 'zlib1g-dev'
+#    - 'make'
+#    - 'genisoimage'
+#    - 'libncurses5-dev'
+#    - 'libssl-dev'
+#    - 'patch'
+#    - 'perl-modules'
+#    - 'rsync'
+#    - 'ruby'
+#    - 'sdcc'
+#    - 'unzip'
+#    - 'wget'
+#    - 'gettext'
+#    - 'xsltproc'
+#    - 'zlib1g-dev'
+#    - 'libboost1.55-dev'
+#    - 'libxml-parser-perl'
+#    - 'libusb-dev'
+#    - 'bin86'
+#    - 'bcc'
+#    - 'sharutils'
+#    - 'openjdk-7-jdk'
+#    - 'build-essential'
+#    - 'subversion'
+#    - 'git-core'
+#    - 'libncurses5-dev'
+#    - 'zlib1g-dev'
+#    - 'gawk'
+#    - 'flex'
+#    - 'quilt'
+#    - 'libssl-dev'
+#    - 'xsltproc'
+#    - 'libxml-parser-perl'
+#    - 'mercurial'
+#    - 'bzr'
+#    - 'ecj'
+#    - 'cvs'
+#    - 'unzip'
+#    - 'build-essential'
+#    - 'subversion'
+#    - 'libncurses5-dev'
+#    - 'zlib1g-dev'
+#    - 'gawk'
+#    - 'gcc-multilib'
+#    - 'flex'
+#    - 'git-core'
+#    - 'gettext'
+#  when: ansible_distribution == "Ubuntu"
+#  tags:
+#    - openwrt
+
+#ansible command is not processed through a shell, so variables like $HOME and operations like "<", ">", "|", ";" and "&" will not work
+- name: shell apt install openwrt tools
+  shell: 
+    cmd: |
+      sudo apt-get update
+      sudo apt-get install asciidoc bash bc binutils bzip2  fastjar flex git-core gcc util-linux gawk libgtk2.0-dev intltool jikespg zlib1g-dev make genisoimage libncurses5-dev libssl-dev patch  perl-modules rsync ruby sdcc unzip wget gettext xsltproc zlib1g-dev libboost1.55-dev   libxml-parser-perl libusb-dev bin86 bcc sharutils openjdk-7-jdk -y
+      sudo apt-get install build-essential subversion git-core libncurses5-dev zlib1g-dev gawk flex quilt libssl-dev xsltproc libxml-parser-perl mercurial bzr ecj cvs unzip build-essential subversion libncurses5-dev zlib1g-dev gawk gcc-multilib flex git-core gettext -y
+  register: apt-result
+  when: ansible_distribution == "Ubuntu"
+  tags:
+    - openwrt
+
+#using debug, you cannot display realtime message at stdout
+- name: display output of apt install
+  debug:
+    var: apt-result
+

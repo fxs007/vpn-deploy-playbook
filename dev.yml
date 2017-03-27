@@ -1,0 +1,8 @@
+---
+- hosts: dev
+
+  vars:
+    ipsec_use_ip_as_domain: true
+
+  roles:
+    - dev

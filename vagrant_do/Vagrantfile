@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.provision "shell", inline: "sudo locale-gen en_US.UTF-8"
+
+  config.vm.define "ubuntu" do |ubuntu|
+    ubuntu.vm.network "private_network", ip: "192.168.33.20"
+    ubuntu.vm.provision "ansible" do |ansible|
+      ansible.limit = 'all'
+#      ansible.playbook = "../test.yml"
+      ansible.playbook = "../ipsec.yml"
+      ansible.inventory_path = "ansible_hosts"
+      #ansible.host_key_checking = false
+      #ansible.extra_vars = { ssh_user: 'root' }
+    end
+  end
+
+  config.vm.provider :digital_ocean do |provider, override|
+    override.ssh.private_key_path = "~/.ssh/id_rsa"
+    override.vm.box = 'digital_ocean'
+    override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+    provider.token = 'NEED TO COPY FROM DO'
+    #ubuntu blocks because it does not have rc.local
+    #provider.image = 'ubuntu-16-10-x32'
+    provider.image = 'debian-8-x64'
+    #Even settign tags, created VM does not have any tags
+    #provider.tags = '[default]'
+    provider.region = 'nyc1'
+    provider.size = '512mb'
+  end 
+
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update; apt-get install -y python
+#    yum install -y python
+  SHELL
+
+end

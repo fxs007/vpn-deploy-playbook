@@ -1,0 +1,25 @@
+set hlsearch
+set nu
+set ruler
+"set list
+"set nolist
+set colorcolumn=80
+syntax on
+
+autocmd BufNewFile,BufRead *.c,*.h,*.cpp,*.hpp,*.ipp,*.cc,*.hh setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd BufNewFile,BufRead *.yang setlocal tabstop=4 shiftwidth=4 expandtab matchpairs+=<:>,":"
+
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+"map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+
+highlight DiffAdd term=reverse cterm=bold ctermbg=green ctermfg=white 
+highlight DiffChange term=reverse cterm=bold ctermbg=cyan ctermfg=black 
+highlight DiffText term=reverse cterm=bold ctermbg=gray ctermfg=black 
+highlight DiffDelete term=reverse cterm=bold ctermbg=red ctermfg=black 
+highlight ColorColumn ctermbg=lightred guibg=lightred
+
+"need global gtags.vim
+nmap <C-n> :cn<CR>
+nmap <C-p> :cp<CR>
+nmap <C-\><C-]> :GtagsCursor<CR>
+"nmap <C-g> :Gozilla<CR>

@@ -18,6 +18,11 @@
     - ipsec
     - ios8
 
+- debug: msg='ikev2_users = {{ ikev2_users }} '
+
+- debug: msg="item.username = {{ item.username }}" 
+  with_items: "{{ ikev2_users }}"
+
 - name: generate ios config files
   template: src=ios8-profile.mobileconfig dest=/var/www/ikev2/ios8-profile/{{ item.username }}.mobileconfig
   with_items: "{{ ikev2_users }}"

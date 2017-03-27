@@ -1,0 +1,5 @@
+---
+dev_owner: "{{ ansible_user }}"
+dev_group: "{{ ansible_user }}"
+#dest_prefix: /home/vagrant OR /root
+dest_prefix: "{% if 'root' == ansible_user %}/{{ ansible_user }}{% else %}/home/{{ ansible_user }}{%endif%}"
