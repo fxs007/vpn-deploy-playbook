@@ -3,7 +3,7 @@ exec > "/root/$(basename ${0}).log1" 2>&1
 set -x
 
 install_locale() {
-  sudo locale-gen en_US.UTF-8
+  locale-gen en_US.UTF-8
 }
 
 install_root_ssh_key() {
@@ -17,11 +17,12 @@ install_jenkins() {
     wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | apt-key add -
     sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
     apt-get install -y jenkins
-    #/etc/init.d/jenkins start
+    sed -i 's/JENKINS_HOME=\/var\/lib\/\$NAME/JENKINS_HOME=\/vagrant\/$NAME/' /etc/default/jenkins
+    /etc/init.d/jenkins start
 }
 
 install_vnc() {
-  sudo apt-get install -y vnc4server xvnc4viewer
+  apt-get install -y vnc4server xvnc4viewer
 }
 
 if [ ! -f ~/runonce ]
