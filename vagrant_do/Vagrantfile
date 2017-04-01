@@ -12,11 +12,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ubuntu.vm.network "private_network", ip: "192.168.33.20"
     ubuntu.vm.provision "ansible" do |ansible|
       ansible.limit = 'all'
-#      ansible.playbook = "../test.yml"
-      ansible.playbook = "../ipsec.yml"
-      ansible.inventory_path = "ansible_hosts"
-      #ansible.host_key_checking = false
-      #ansible.extra_vars = { ssh_user: 'root' }
+      ansible.playbook = "../dev.yml"
+#      ansible.playbook = "../ipsec.yml"
+#      ansible.inventory_path = "ansible_hosts"
+      ansible.inventory_path = "scripts/a-better-digitalocean-inventory-for-ansible/digital_ocean.py"
+#      ansible.host_key_checking = false
+#      ansible.extra_vars = { ssh_user: 'root' }
     end
   end
 
@@ -24,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     override.ssh.private_key_path = "~/.ssh/id_rsa"
     override.vm.box = 'digital_ocean'
     override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-    provider.token = 'NEED TO COPY FROM DO'
+    provider.token = 'API TOKEN'
     #ubuntu blocks because it does not have rc.local
     #provider.image = 'ubuntu-16-10-x32'
     provider.image = 'debian-8-x64'
