@@ -1,4 +1,5 @@
 #!/bin/bash
+#it is used to generate ansible_hosts. Can be replaced by dynamic inventory
 echo "Enter $0"
 #input
 provisioner=$1

@@ -9,6 +9,8 @@
     - vim
     - git
     - expect
+    - subversion
+    - cmake
   when: ansible_distribution == "Ubuntu"
   tags:
     - dev
@@ -39,5 +41,5 @@
   tags:
     - dev
 
-- include: openwrt.yml
+#- include: openwrt.yml
 
