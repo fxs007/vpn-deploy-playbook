@@ -1,0 +1,100 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  ###############
+  # PLUGIN CONFIG
+  ###############
+
+  #vagrant plugin install vagrant-triggers vagrant-cachier vagrant-vbguest
+  if Vagrant.has_plugin?("vagrant-triggers")
+     puts "[information] vagrant-triggers plugin found"
+  else
+     puts "[Error] vagrant-triggers plugin not found - please install it"
+#     abort "[Error] vagrant-triggers plugin not found - please install it"
+  end
+
+  # These vm's download lots of packages, so caching can improve
+  # performance when creating new machines.
+  #
+  # vagrant-cachier : https://github.com/fgrehm/vagrant-cachier
+
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = true
+  else
+    # only display the tips on vagrant up
+    if ARGV[0] == "up"
+      puts "[information] recommended vagrant plugin 'vagrant-cachier' plugin was not found" 
+      puts "[information] 'vagrant-cachier' will speed up repeated provisioning operations" 
+    end
+  end
+
+  # Use the vbguest plugin to keep the guest os virtualbox utils
+  # in line with the host's virtualbox version
+  #
+  # vbguest : https://github.com/dotless-de/vagrant-vbguest
+
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    config.vbguest.auto_update = false
+  else 
+    # only display the tips on vagrant up
+    if ARGV[0] == "up"
+      puts "[information] recommended vagrant plugin 'vagrant-vbguest' plugin was not found" 
+      puts "[information] please consider installing 'vagrant-vbguest'" 
+    end
+  end
+
+  config.ssh.insert_key = true
+  config.ssh.keys_only = true
+  config.vm.provision "shell", inline: <<-SHELL
+    #echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEA1fwtpwzYdB76K4ll9m0SVnSWTZByXmrFrfvTZu2PUAcQ8nicKm5zbujozGERQ+6qM9rfRLVxLfULJ57xzKWJmmyl9o6jP/q6pXECVplscjrNDVWUxJCh+MspsiCH/uebyl6lTqENVTNuxCE4hwb03WMdoLGxCOWgEzvS4OjVozTuMaBMOgmAGP440xYT4lZtU65b29OP+PAcI2Nzr3afziwQ4MD7KSBVAg6R20eu82VAAXF2M8MXFdRxc0tPvhFHPey7rlKjLFKDy93xBvXscvhfHuKsaVZgmLftmIcwNcZ4/khSuZJkKduzmaKHqJFHoXOa7NYIP7rEIj9Bge/piw== rsa-key-20150622" >> /home/vagrant/.ssh/authorized_keys
+    sudo yum install -y python
+    sudo chmod +x /vagrant/run_once.sh
+    sudo /vagrant/run_once.sh
+  SHELL
+
+  #config.vm.box = "ubuntu/trusty64"
+  #config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "centos/7"
+
+#  config.vm.synced_folder File.expand_path("~/.m2"),
+#    "/home/vagrant/.m2/",
+#    :create => true,
+#    :mount_option => "dmode=777,fmode=666"
+
+  config.vm.synced_folder File.expand_path("./vagrant_dir"),
+    "/vagrant",
+    :create => true,
+    :mount_option => "dmode=755,fmode=666"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--cpus", "1"]
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+  end
+
+  #config.vm.network "private_network", type: "dhcp"
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.limit = 'all'
+    ansible.playbook = "../dev.yml"
+    ansible.inventory_path = "./ansible_hosts"
+    #ansible.inventory_path = "./scripts/vagrant.py/vagrant.py"
+    ansible.host_key_checking = false
+    ansible.sudo = true
+  end
+
+  config.vm.define "c1", primary: true do |c1|
+    c1.vm.provider "virtualbox" do |vb|
+      vb.name = "c1"
+    end
+    c1.vm.network "private_network", ip: "192.168.33.160"
+  end
+
+end
+
