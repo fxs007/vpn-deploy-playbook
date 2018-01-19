@@ -1,0 +1,48 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+
+  tasks:
+  - vsphere_guest:
+      vcenter_hostname: 10.74.68.16
+      username: administrator@vsphere.local
+      password: Cisco123!
+      validate_certs: False
+      guest: "{{guest}}"
+      #No guest customization changes to hardware such as CPU, RAM, NICs or Disks can be applied when launching from template.
+      from_template: yes
+      template_src: findit_cloud_template
+      #state: powered_on
+      vm_extra_config:
+        vcpu.hotadd: yes
+        mem.hotadd:  yes
+        notes: This is a test VM
+#        folder: xinsfang
+      vm_disk:
+        disk1:
+          size_gb: 40
+          type: thin
+          datastore: datastore12-1
+          # VMs can be put into folders. The value given here is either the full path
+          # to the folder (e.g. production/customerA/lamp) or just the last component
+          # of the path (e.g. lamp):
+          folder: xinsfang
+      vm_nic:
+        nic1:
+          type: vmxnet3
+          network: VM Network
+          network_type: standard
+      vm_hardware:
+        memory_mb: 2048
+        num_cpus: 2
+        osid: ubuntu64Guest
+        scsi: paravirtual
+#        vm_cdrom:
+#          type: "iso"
+#          iso_path: "datastore12-1/ubuntu-16.04.1-server-amd64.iso"
+  #      vm_floppy:
+  #        type: "image"
+  #        image_path: "DatastoreName/floppy-image.flp"
+      esxi:
+        datacenter: Datacenter
+        hostname: 10.74.68.12
