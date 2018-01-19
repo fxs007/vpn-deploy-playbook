@@ -11,6 +11,7 @@
     - expect
     - subversion
     - cmake
+    - fakeroot
   when: ansible_distribution == "Ubuntu"
   tags:
     - dev

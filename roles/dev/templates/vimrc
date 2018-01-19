@@ -1,3 +1,5 @@
+set nobackup
+set nowritebackup
 set hlsearch
 set nu
 set ruler

@@ -11,8 +11,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ###############
 
   #vagrant plugin install vagrant-triggers vagrant-cachier vagrant-vbguest
-  unless Vagrant.has_plugin?("vagrant-triggers")
-     abort "[Error] vagrant-triggers plugin not found - please install it"
+  if Vagrant.has_plugin?("vagrant-triggers")
+     puts "[information] vagrant-triggers plugin found"
+  else
+     puts "[Error] vagrant-triggers plugin not found - please install it"
+#     abort "[Error] vagrant-triggers plugin not found - please install it"
   end
 
   # These vm's download lots of packages, so caching can improve
@@ -51,6 +54,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
   end
 
@@ -60,7 +64,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
      # rdesktop (linux/osx) to connect to localhost:4480 the username
      # and password is vagrant/vagrant
-#    ubuntu.vm.network "forwarded_port", guest: 3389, host: 4480
+    #ubuntu.vm.network "forwarded_port", guest: 22, host: 4220
+    ubuntu.vm.network "forwarded_port", guest: 8088, host: 28088
 #
 #    ubuntu.vm.provider :virtualbox do |vb|
 #      file_to_disk = File.realpath( "." ).to_s + "/disk100.vdi"

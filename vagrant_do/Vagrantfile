@@ -12,10 +12,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ubuntu.vm.network "private_network", ip: "192.168.33.20"
     ubuntu.vm.provision "ansible" do |ansible|
       ansible.limit = 'all'
-      ansible.playbook = "../dev.yml"
-#      ansible.playbook = "../ipsec.yml"
-#      ansible.inventory_path = "ansible_hosts"
-      ansible.inventory_path = "scripts/a-better-digitalocean-inventory-for-ansible/digital_ocean.py"
+#      ansible.playbook = "../dev.yml"
+      ansible.playbook = "../ipsec.yml"
+      ansible.inventory_path = "ansible_hosts"
+#ipsec.yml needs many specific sections in host file
+#      ansible.inventory_path = "scripts/a-better-digitalocean-inventory-for-ansible/digital_ocean.py"
 #      ansible.host_key_checking = false
 #      ansible.extra_vars = { ssh_user: 'root' }
     end
